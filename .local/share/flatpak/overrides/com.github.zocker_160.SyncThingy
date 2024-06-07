@@ -1,0 +1,3 @@
+[Context]
+filesystems=!host;/var/home/user/Backup-Handy/Musik;/var/home/user/Backup-Handy/SYNC;/var/home/user/Backup-Handy;
+sockets=!x11;

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# upgrade the system with rpm-ostree
+# this works when using OCI images like uBlue variants.
+# Note that these image should not need manual upgrades.
+
+# get the full system repo URL
+OSPATH=$(rpm-ostree status --json | grep -o '"container-image-reference" : "[^"]*' | tail -1 | cut -d '/' -f 3- | cut -d ':' -f 1)
+
+# get the release version
+RELEASEVER=$(rpm-ostree status --json | grep -o '"container-image-reference" : "[^"]*' | tail -1 | cut -d '/' -f 3- | cut -d ':' -f 2)
+
+NEWRELEASE=$(($RELEASEVER + 1))
+
+notify-send -t 0 -a "System Upgrade" "Backing up" "Enter your password to backup the currently used version."
+
+# pin current release for rollback purposes
+pkexec ostree admin pin 0 && notify-send -a "System Upgrade" "Backup done" "Your current system is saved until you manually remove it. If the upgrade causes problems, you can always roll back. Remove this pinned release with 'sudo ostree admin pin -u -1'"
+
+notify-send -t 0 -a "System Upgrade" "Starting upgrade" "Enter your password to start the upgrade"
+
+# increment the releaseversion and rebase to upgrade
+konsole -e pkexec rpm-ostree rebase ostree-image-signed:docker://$OSPATH:$NEWRELEASE && notify-send -t 0 -a "System Upgrade" "Upgrade to Fedora $NEWRELEASE done!" "The system is upgraded. Reboot now, to start into your new system. The reboot will not take longer than any normal reboot. Remember: You can always roll back in the GRUB menu and with 'rpm-ostree rollback'."

@@ -1,0 +1,6 @@
+[Context]
+filesystems=!host;$HOME/Nextcloud:create;
+sockets=x11;session-bus;
+
+[Session Bus Policy]
+org.freedesktop.Flatpak=talk

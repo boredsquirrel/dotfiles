@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# upgrade the system with rpm-ostree
+# this is only needed when upgrading from a number release to "latest"
+
+notify-send -t 0 -a "System Upgrade" "Backing up" "Enter your password to backup the currently used version."
+
+# pin current release for rollback purposes
+pkexec ostree admin pin 0 && notify-send -a "System Upgrade" "Backup done" "Your current system is saved until you manually remove it. If the upgrade causes problems, you can always roll back. Remove this pinned release with 'sudo ostree admin pin -u -1'"
+
+notify-send -t 0 -a "System Upgrade" "Starting upgrade" "Enter your password to start the upgrade"
+
+# increment the releaseversion and rebase to upgrade
+konsole -e pkexec rpm-ostree rebase ostree-image-signed:docker://$OSPATH:latest && notify-send -t 0 -a "System Upgrade" "Upgrade done!" "The system is upgraded. Reboot now, to start into your new system. The reboot will not take longer than any normal reboot. Remember: You can always roll back in the GRUB menu and with 'rpm-ostree rollback'."

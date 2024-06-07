@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment[de_DE]=
+Comment=
+Exec=/var/home/user/.config/autostart/autostart-all
+GenericName[de_DE]=
+GenericName=
+Icon=application-x-shellscript
+MimeType=
+Name[de_DE]=autostart-all
+Name=autostart-all
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-AutostartScript=true
+X-KDE-SubstituteUID=false
+X-KDE-Username=

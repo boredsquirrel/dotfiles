@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=SyncThingy Mullvad-exclude
+Exec=mullvad-exclude flatpak run --branch=stable --arch=x86_64 --command=SyncThingy com.github.zocker_160.SyncThingy
+GenericName=File synchronization
+Comment=SyncThingy = Synthing + simple tray indicator
+Icon=com.github.zocker_160.SyncThingy
+StartupNotify=false
+Terminal=false
+Type=Application
+Keywords=synchronization;interface;
+Categories=Network;FileTransfer;P2P
+X-Flatpak-RenamedFrom=SyncThingy.desktop;
+X-Flatpak=com.github.zocker_160.SyncThingy

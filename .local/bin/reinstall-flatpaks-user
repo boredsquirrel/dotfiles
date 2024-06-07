@@ -1,0 +1,11 @@
+#!/bin/bash
+# reinstall all flatpak apps as user apps
+# also fixes wrong metadata bug https://github.com/flatpak/flatpak/issues/5700
+
+
+list=$(flatpak list --app --columns=application)
+
+for app in $list
+do
+	flatpak install --user --reinstall -y "$app"
+done

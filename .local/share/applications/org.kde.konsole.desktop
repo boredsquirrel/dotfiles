@@ -1,0 +1,41 @@
+[Desktop Action FedoraBox]
+Exec=konsole --profile Fedora-Box
+Icon=fedora-logo-icon
+Name=Distrobox
+
+[Desktop Action root]
+Exec=konsole -e pkexec fish
+Icon=folder-root-symbolic
+Name=root Terminal
+
+[Desktop Action ssh]
+Exec=konsole -e ssh -i /home/user/.ssh/mephisto -p 22 mephisto@37.218.240.103
+Icon=folder-remote-symbolic
+Name=ssh to AR
+
+[Desktop Entry]
+Actions=FedoraBox;root;ssh;
+Categories=System;TerminalEmulator;
+Comment[de_DE]=Command line access
+Comment=Command line access
+Exec=konsole --new-tab
+GenericName[de_DE]=Terminal
+GenericName=Terminal
+Icon=utilities-terminal
+Keywords=terminal;console;script;run;execute;command;command-line;commandline;cli;bash;sh;shell;zsh;cmd;command prompt
+MimeType=
+Name[de_DE]=Konsole
+Name=Konsole
+Path=
+StartupNotify=true
+StartupWMClass=konsole
+Terminal=false
+TerminalOptions=
+TryExec=konsole
+Type=Application
+X-DBUS-StartupType=Unique
+X-DocPath=konsole/index.html
+X-KDE-AuthorizeAction=shell_access
+X-KDE-Shortcuts=Ctrl+Alt+T
+X-KDE-SubstituteUID=false
+X-KDE-Username=

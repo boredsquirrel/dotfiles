@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# start MullvadVPN directly
+/opt/Mullvad VPN/mullvad-vpn %U
+sleep 10
+
+# run Syncthingy excluded from VPN
+/bin/mullvad-exclude /usr/bin/flatpak run --command=SyncThingy com.github.zocker_160.SyncThingy
+
+# run Nextcloud in the background
+/usr/bin/nextcloud --background
+
+# CHANGEME: set default Mic volume (often wrong) and mute it
+pactl set-source-volume $(pactl get-default-source) 10%
+pactl set-source-mute $(pactl get-default-source) 1
+
+# kill the annoying Plasma Discover Update Notification
+killall -15 DiscoverNotifier
+
+# other apps
+sleep 5
+dolphin &
+
+#sleep 3
+#/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=signal-desktop --file-forwarding org.signal.Signal &
+#/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=thunderbird --file-forwarding org.mozilla.Thunderbird &
+
+#sleep 10
+#/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=qbittorrent --file-forwarding org.qbittorrent.qBittorrent &
+
+
+# update flatpak apps manually
+sleep 320
+flatpak update -y && notify-send -a "Update" "Flatpaks feddich"
+
+# run a script to download the thunderbird hardening user.js and change some things to make it work for normal use cases
+/var/home/user/.var/app/org.mozilla.Thunderbird/.thunderbird/thunderbird-hardening-overwrite || notify-send -a "Thunderbird overwrite" "Error" "Updating the Thunderbird hardening failed, please contact github.com/trytomakeyouprivate to see whats wrong."
+
+#sleep 60
+#clamscan update

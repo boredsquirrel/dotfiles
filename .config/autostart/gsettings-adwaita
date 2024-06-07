@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+sleep 20
+# set the GTK icon theme to Adwaita
+gsettings set org.gnome.desktop.interface icon-theme Adwaita && notify-send "gsettings Adwaita gesetzt" || notify-send "gsettings gefailt"

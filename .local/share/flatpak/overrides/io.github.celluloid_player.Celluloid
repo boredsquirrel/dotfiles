@@ -1,0 +1,9 @@
+[Context]
+devices=!all;dri;
+filesystems=!xdg-pictures;
+shared=!network;!ipc;
+sockets=!pulseaudio;!x11;
+
+[Environment]
+GTK_THEME=Adwaita:dark
+

@@ -1,0 +1,5 @@
+[Context]
+sockets=!x11;wayland;
+
+[Environment]
+QT_QPA_PLATFORM=wayland

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=if [[ $(systemctl --user is-active bluetooth-user) == "active" ]]; then echo disable; else echo enable; fi
+GenericName=disable/ enable kdeconnect with firewalld
+Icon=kdeconnect
+Name=Toggle KDE Connect (INCOMPLETE)
+Type=Application

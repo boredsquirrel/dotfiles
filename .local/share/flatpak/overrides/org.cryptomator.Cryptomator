@@ -1,0 +1,9 @@
+[Context]
+filesystems=!home;!xdg-run/app/org.keepassxc.KeePassXC;!xdg-run/org.keepassxc.KeePassXC.BrowserServer;/var/home/user/Backup-Handy/SYNC/Backups/PGP-privat;/var/home/user/Nextcloud/CryptCloud;/var/home/user/.local/share/Cryptomator;/var/home/user/.config/Cryptomator;/var/home/user/Nextcloud/Dokumente;
+sockets=!x11;wayland;
+
+[Environment]
+ELECTRON_OZONE_PLATFORM_HINT=wayland
+
+[Session Bus Policy]
+org.freedesktop.Flatpak=own

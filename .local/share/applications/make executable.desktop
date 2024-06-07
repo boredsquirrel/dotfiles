@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=chmod +x
+Icon=application-x-executable-script
+MimeType=application/vnd.appimage;application/x-iso9660-appimage;application/x-java-archive;application/x-shellscript;text/x-python;text/x-python3;
+Name[de_DE]=Ausführbar machen
+Name=Make executeable
+

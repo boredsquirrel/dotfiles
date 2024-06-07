@@ -1,0 +1,214 @@
+#!/usr/bin/env bash
+
+# Copyright (C) 2022 flatpak-dedup-checker Contributors
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Define all (environment) variables
+# Set environments
+export LC_ALL=C # Force locale so grep can function correctly
+let GB="10**9" # Usage of "let" for variables with arithmetic expression
+FLATPAK_DIR="/var/lib/flatpak"
+ADMIN_PRIVILEGE=""
+
+
+# Define all functions
+
+function help() {
+	cat <<- EOF
+	flatpak-dedup-checker is a utility to check the amount of data used in a
+	Flatpak directory.
+
+	Usage: flatpak-dedup-checker [options] COMMAND
+
+	List of options:
+	-h, --help		Print the help section and exit
+	-p PATH, --path=PATH	Specify custom path (default: /var/lib/flatpak)
+	-r, --runtime		List data only used by runtimes
+	-a, --app		List data only used by applications
+	--user			Work on the user installation
+
+EOF
+}
+
+function setPrivEscUtil() {
+	# Check privilege utility to check for compression
+	for admin in pkexec sudo doas; do
+		if command -v $admin &> /dev/null; then
+			export ADMIN_PRIVILEGE="$admin"
+			break
+		fi
+	done
+}
+
+function setCustomPath() {
+	[[ $1 == "-p" ]] \
+	&& { FLATPAK_DIR="$2" ; dir="$2/runtime $2/app" ; } \
+	|| { 
+		dir="$(eval echo "$1" | 
+		cut --delimiter='=' --fields=2 | 
+		tr --delete '"')" 
+				
+		[[ "${dir:0:1}" == "~" ]] \
+		&& {
+			FLATPAK_DIR="${HOME}${dir:1}" ;
+			dir="${HOME}${dir:1}/runtime ${HOME}${dir:1}/app" ;
+		   }
+		}
+}
+
+function parseSetFlags() {
+	# Check flags invoked by the user
+	while test $# != 0; do
+		case $1 in
+			-h|--help) help ; exit ;;
+			-p|--path*) setCustomPath "$1" "$2" ;;
+			-r|--runtime) IS_RUNTIME="1" ;;
+			-a|--app) IS_APP="1" ;;
+			--user) FLATPAK_DIR="$HOME/.local/share/flatpak" ;;
+		esac
+		shift
+	done
+}
+
+function setDirectoriesToUse() {
+	# Set default directory if unspecified
+	export "${dir:=$FLATPAK_DIR/runtime $FLATPAK_DIR/app}" &> /dev/null
+	dir=($dir)
+	
+	# Check if directories are Flatpak directories
+	for i in "${dir[@]}"; do
+		[[ ! -d "$i" ]] && { 
+			cat <<- EOF
+				"$dir" is not a Flatpak directory!
+				Usage: -p PATH, --path=PATH
+			EOF
+			exit ; }
+	done
+	
+	# Appropriately set the directories if specified
+	if [[ "$IS_RUNTIME" == "1" ]]; then
+		DIR="${dir[0]}"
+	elif [[ "$IS_APP" == "1" ]]; then
+		DIR="${dir[1]}"
+	else
+		DIR="${dir[*]}"
+	fi
+}
+
+function isBtrfs() {
+	# Check if btrfs is in use
+	local dirToTest=$1
+	[[ $(stat --file-system --format=%T "$dirToTest") = "btrfs" ]] \
+	&& return 0 \
+	|| return 1
+}
+
+function isCompressed() {
+	# Check if directory is compressed
+	[[ "$(echo "$COMPSIZE_OUTPUT" | tail -1 | cut --delimiter=' ' --fields=1)" != "none" ]] \
+	&& return 0 \
+	|| return 1
+}
+
+function getCompsizeCmdOutput() {
+	# Produces Output of the form:
+	# Processed 391827 files, 75135 regular extents (209727 refs), 182066 inline.
+	# Type       Perc     Disk Usage   Uncompressed Referenced  
+	# TOTAL      100%     17032582694  17032582694  35841848870 
+	# none       100%     17032582694  17032582694  35841848870 
+	echo "$($ADMIN_PRIVILEGE compsize --one-file-system --bytes ${DIR[@]})"
+}
+
+function getCompsizeOnly() {
+	# Takes Output of getCompsizeCmdOutput as Input
+	local COMPSIZE_PRE_HUMAN_READABLE
+	local COMPSIZE_POST_HUMAN_READABLE
+
+	COMPSIZE_PRE_HUMAN_READABLE="$(
+			echo "$COMPSIZE_OUTPUT" \
+				| grep TOTAL \
+				| tr --squeeze-repeats \[:blank:\] \
+				| cut --delimiter=' ' --fields=3
+		) / $GB"
+	COMPSIZE_POST_HUMAN_READABLE="$(bc -q 2> /dev/null <<< "scale=2; ${COMPSIZE_PRE_HUMAN_READABLE}")"
+	
+	echo "$COMPSIZE_POST_HUMAN_READABLE"
+}
+
+function main() {
+	# Check if btrfs is in use
+	if isBtrfs "$FLATPAK_DIR" ; then
+		COMPSIZE_OUTPUT="$(getCompsizeCmdOutput)"
+		# Check whether compression is used
+		if isCompressed "$COMPSIZE_OUTPUT" ; then
+			COMPSIZE="$(getCompsizeOnly)"
+		fi
+	fi
+
+	# Calculate original size (pre-deduplication)
+	ORIGINAL_SIZE="$(
+			bc --quiet <<< "scale=2; 
+				$(
+					du --summarize --human-readable --total --count-links --bytes ${DIR[@]} \
+						| grep total | tr --delete \[:alpha:\] | tr --delete \[:blank:\]
+				) / $GB"
+	)"
+
+	# Calculate deduplicated size (post-deduplication)
+	DEDUP_SIZE="$(
+		bc --quiet <<< "scale=2; $(
+			du --summarize --human-readable --total --bytes ${DIR[@]} \
+				| grep total | tr --delete \[:alpha:\] | tr --delete \[:blank:\]) / $GB"
+	)"
+
+	# Calculate percentage
+	PERCENT_DEDUP_SIZE="$(
+		bc --quiet <<< "scale=2; ${DEDUP_SIZE} / ${ORIGINAL_SIZE} * 100" \
+			| cut --delimiter='.' --fields=1
+	)"
+
+	PERCENT_COMPSIZE_OF_ORIGINAL_SIZE="$(
+		bc --quiet 2> /dev/null <<< "scale=2; ${COMPSIZE} / ${ORIGINAL_SIZE} * 100" \
+			| cut --delimiter='.' --fields=1
+	)"
+
+	PERCENT_COMPSIZE_OF_DEDUP_SIZE="$(
+		bc --quiet 2> /dev/null <<< "scale=2; ${COMPSIZE} / ${DEDUP_SIZE} * 100" \
+			| cut --delimiter='.' --fields=1
+	)"	
+}
+
+function printResults() {
+	# Print
+	if [[ "$IS_RUNTIME" == "1" || "$IS_APP" == "1" ]]; then
+		echo "Directory:                  ${DIR[*]}"
+	else
+		echo "Directories:                ${FLATPAK_DIR}/{runtime,app}"
+	fi
+	echo "Size without deduplication: ${ORIGINAL_SIZE} GB"
+	echo "Size with deduplication:    ${DEDUP_SIZE} GB (${PERCENT_DEDUP_SIZE}% of ${ORIGINAL_SIZE} GB)"
+	if [[ -n "$COMPSIZE" ]]; then
+		echo "Size with compression:      ${COMPSIZE} GB (${PERCENT_COMPSIZE_OF_ORIGINAL_SIZE}% of ${ORIGINAL_SIZE} GB; ${PERCENT_COMPSIZE_OF_DEDUP_SIZE}% of ${DEDUP_SIZE} GB)"
+	fi
+
+}
+
+
+### ENTRYPOINT ###
+setPrivEscUtil
+parseSetFlags ${BASH_ARGV[@]}
+setDirectoriesToUse
+main
+printResults

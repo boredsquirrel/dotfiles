@@ -1,0 +1,7 @@
+[Context]
+filesystems=!host;/var/home/user/Backup-Handy/SYNC;
+shared=!network;!ipc;
+sockets=!x11;
+
+[Environment]
+QT_QPA_PLATFORM=wayland

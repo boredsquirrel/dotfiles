@@ -1,0 +1,7 @@
+[Context]
+sockets=!x11;
+
+[Environment]
+GTK_THEME=Adwaita:dark
+#does not work:
+GTK_USE_PORTAL=1

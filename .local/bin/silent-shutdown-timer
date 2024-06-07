@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Video/Audio auto-off
+# This script can be run and will decrease the
+# Loop to decrease volume by 10% every minute and finally shuts down the computer
+# For people that want to fall asleep or whatever
+
+while true; do
+
+    # Decrease volume
+    pactl set-sink-volume @DEFAULT_SINK@ -1%
+    volume=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | sed 's/.$/%/')
+    echo "Volume: $volume"
+    # if below 10%, shutdown immediately
+    if (( $(echo "${volume}" | cut -d'%' -f1) < 41 )); then
+        break
+    fi
+    # Sleep for 5 seconds
+    sleep 5
+done
+
+# Shutdown the system
+echo "Shutting down..."
+sleep 10
+shutdown now

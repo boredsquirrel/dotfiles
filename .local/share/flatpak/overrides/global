@@ -1,0 +1,22 @@
+# Secureblue global defaults
+# preloading hardened_malloc requires this sandbox hole
+# it will not work reliably with Electron apps
+# uncomment the lines to apply anyways
+
+# these overrides use badness enumeration and are incomplete
+# but "perfect is the enemy of good" ;D
+
+
+[Context]
+# filesystems=host-os:ro;
+filesystems=xdg-run/pipewire-0:ro;
+sockets=!x11;!pulseaudio;wayland;
+shared=!ipc;
+
+[Environment]
+# LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so
+QT_QPA_PLATFORM=wayland
+ELECTRON_OZONE_PLATFORM_HINT=wayland
+
+[Session Bus Policy]
+org.freedesktop.Flatpak=none

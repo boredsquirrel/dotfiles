@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/bin/python3 -m http.server --directory /home/user/Git/Photopea-Offline/www.photopea.com 8080 &

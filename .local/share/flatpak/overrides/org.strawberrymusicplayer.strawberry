@@ -1,0 +1,4 @@
+[Context]
+devices=!all;
+filesystems=!/media;!/mnt;!/run/media;/var/home/user/Backups/Backup-Handy/Music;
+sockets=!x11;!pulseaudio;

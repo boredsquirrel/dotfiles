@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+function del_old() {
+# dangerous: will not keep any files if all are older than x days.
+# do not currently use without caution
+
+  # Check if the directory exists
+  if [ ! -d "$1" ]; then
+    echo "Error: directory $1 does not exist."
+    return 1
+  fi
+
+  # Delete files older than given number of days
+  find "$1" -type f -mtime +"$2" -exec rm {} \;
+
+  echo "Deleted files older than $2 days in $1"
+}
+
+# Usage: delete_old_files <directory_path> <num_days>
+#delete_old_files "$1" "$2"
+
+function del_outdated() {
+    dir=$1
+    num_files_to_keep=$2
+
+    # Change to the specified directory
+    cd "$dir" || return
+
+    # Get a list of all files and sort them by modification time
+    # oldest first, to delete them first
+    files=($(ls -t -r))
+
+    # Determine the number of files to delete
+    num_files_to_delete=$(( ${#files[@]} - $num_files_to_keep ))
+
+    # Loop through the list of files and delete the excess ones
+    for (( i=0; i<$num_files_to_delete; i++ )); do
+        rm "${files[$i]}"
+    done
+
+    echo "Deleted all but the $2 latest files in $1"
+}
+
+del_outdated ~/Downloads/STG 2
+del_outdated ~/Backups/Backup-Handy/SYNC/Backups/Kontakt-Sync 3

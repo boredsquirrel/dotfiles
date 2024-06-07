@@ -1,0 +1,4 @@
+[Context]
+filesystems=!xdg-download;!xdg-music;!xdg-videos;xdg-run/pipewire-0;
+shared=!ipc;
+sockets=!x11;

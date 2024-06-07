@@ -1,0 +1,55 @@
+[Desktop Entry]
+Type=Application
+Name=LibreWolf
+GenericName=Web Browser
+# Gnome and KDE 3 uses Comment.
+Comment=Web Browser
+StartupNotify=true
+Terminal=false
+Type=Application
+MimeType=application/json;application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
+Comment=LibreWolf Browser
+Categories=Network;WebBrowser;
+StartupWMClass=librewolf-default
+Exec=/usr/share/librewolf/librewolf %u
+Icon=librewolf
+
+Actions=unsicher;new-private-window;profilemanager;Element;
+
+[Desktop Action unsicher]
+Name=Insecure
+Icon=emblem-warning
+Exec=mullvad-exclude /usr/share/librewolf/librewolf -p INSECURE %u
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Exec=/usr/share/librewolf/librewolf --private-window %u
+
+[Desktop Action new-private-window]
+Name=Private Window
+Icon=view-private
+Exec=/usr/share/librewolf/librewolf --private-window %u
+
+[Desktop Action profilemanager]
+Name=Profilemanager
+Icon=configure
+Exec=/usr/share/librewolf/librewolf --ProfileManager %u
+
+[Desktop Action Element]
+Name=Element
+Icon=/var/home/user/.local/share/applications/icons/element.svg
+Exec=/usr/share/librewolf/librewolf -p Webapps https://app.nitro.chat/#/home
+SingleMainWindow=true
+
+# these are not used as they are kinda unnecessary
+
+[Desktop Action safe-mode]
+Name=Start in Safe Mode
+Icon=script-error
+Exec=/usr/share/librewolf/librewolf --safe-mode
+
+[Desktop Action preferences]
+Name=Open Preferences
+Icon=configure-symbolic
+Exec=/usr/share/librewolf/librewolf --preferences
+

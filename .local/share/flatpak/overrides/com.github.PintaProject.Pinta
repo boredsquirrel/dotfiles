@@ -1,0 +1,4 @@
+[Context]
+filesystems=home:ro;!/run/media;!xdg-desktop;!xdg-documents;!xdg-download;!xdg-pictures;!xdg-public-share;!xdg-run/gvfs;!xdg-run/gvfsd;!xdg-templates;
+shared=!network;!ipc;
+sockets=!x11;

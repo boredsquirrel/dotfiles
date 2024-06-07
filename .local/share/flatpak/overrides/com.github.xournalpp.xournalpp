@@ -1,0 +1,4 @@
+[Context]
+filesystems=!host;
+shared=!ipc;
+sockets=!pulseaudio;!x11;

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# this script installs full ffmpeg on Fedora
+# it requires removing the incomplete free packages
+
+# add rpmfusion
+rpm-ostree install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+# remove the free packages, install the complete packages
+# I heard libavcodec-freeworld contains additional codecs, but didnt have the motivation to verify
+rpm-ostree override remove libavutil libavcodec libavif libavformat libavfilter --install ffmpegthumbnailer --install libavcodec-freeworld
+

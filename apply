@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Flatpak app configs
+cp -r $PWD/.var/app/* $HOME/.var/app/
+
+# local binaries
+ln -s $PWD/.local/bin/* $HOME/.local/bin/
+
+# config
+ln -s $PWD/.config/* $HOME/.config/
+
+# flatpak permission overrides
+cp -r $PWD/.local/share/flatpak/overrides/* $HOME/.local/share/flatpak/overrides/
+
+# local app dir
+ln -s $PWD/.local/share/applications/* $HOME/.local/share/applications/
+
+# fonts
+ln -s $PWD/.local/share/fonts/* $HOME/.local/share/fonts

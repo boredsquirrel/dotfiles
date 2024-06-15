@@ -1,18 +1,7 @@
 [Desktop Entry]
-Comment[de_DE]=
-Comment=
-Exec=/var/home/user/.config/autostart/gsettings-adwaita
-GenericName[de_DE]=
-GenericName=
+Exec=$XDG_CONFIG_HOME/autostart/gsettings-adwaita
 Icon=application-x-shellscript
-MimeType=
-Name[de_DE]=gsettings-adwaita
 Name=gsettings-adwaita
-Path=
-StartupNotify=true
-Terminal=false
-TerminalOptions=
 Type=Application
 X-KDE-AutostartScript=true
 X-KDE-SubstituteUID=false
-X-KDE-Username=

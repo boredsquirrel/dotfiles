@@ -11,6 +11,7 @@ sleep 10
 /usr/bin/nextcloud --background
 
 # CHANGEME: set default Mic volume (often wrong) and mute it
+# TODO: convert to pipewire native control
 pactl set-source-volume $(pactl get-default-source) 10%
 pactl set-source-mute $(pactl get-default-source) 1
 
@@ -25,8 +26,8 @@ dolphin &
 #/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=signal-desktop --file-forwarding org.signal.Signal &
 #/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=thunderbird --file-forwarding org.mozilla.Thunderbird &
 
-#sleep 10
-#/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=qbittorrent --file-forwarding org.qbittorrent.qBittorrent &
+sleep 10
+/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=qbittorrent --file-forwarding org.qbittorrent.qBittorrent &
 
 
 # update flatpak apps manually
@@ -34,7 +35,7 @@ sleep 320
 flatpak update -y && notify-send -a "Update" "Flatpaks feddich"
 
 # run a script to download the thunderbird hardening user.js and change some things to make it work for normal use cases
-/var/home/user/.var/app/org.mozilla.Thunderbird/.thunderbird/thunderbird-hardening-overwrite || notify-send -a "Thunderbird overwrite" "Error" "Updating the Thunderbird hardening failed, please contact github.com/trytomakeyouprivate to see whats wrong."
+#/var/home/user/.var/app/org.mozilla.Thunderbird/.thunderbird/thunderbird-hardening-overwrite || notify-send -a "Thunderbird overwrite" "Error" "Updating the Thunderbird hardening failed, please contact github.com/trytomakeyouprivate to see whats wrong."
 
 #sleep 60
 #clamscan update

@@ -1,0 +1,3 @@
+[com/belmoussaoui/Authenticator]
+auto-lock=true
+auto-lock-timeout=5

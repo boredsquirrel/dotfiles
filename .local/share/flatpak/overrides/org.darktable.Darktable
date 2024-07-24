@@ -1,0 +1,4 @@
+[Context]
+devices=!all;
+filesystems=!host;!xdg-run/gvfs;
+shared=!network;

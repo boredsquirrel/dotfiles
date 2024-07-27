@@ -1,19 +1,9 @@
 #!/bin/bash
 
-# Flatpak app configs
-cp -r $PWD/.var/app/* $HOME/.var/app/
+cp -r ./.config ~/
+cp -r ./local ~/
+cp -r ./.var ~/
+cp -r ./.librewolf ~/
+cp -r ./.mozilla ~/
 
-# local binaries
-ln -s $PWD/.local/bin/* $HOME/.local/bin/
-
-# config
-ln -s $PWD/.config/* $HOME/.config/
-
-# flatpak permission overrides
-cp -r $PWD/.local/share/flatpak/overrides/* $HOME/.local/share/flatpak/overrides/
-
-# local app dir
-ln -s $PWD/.local/share/applications/* $HOME/.local/share/applications/
-
-# fonts
-ln -s $PWD/.local/share/fonts/* $HOME/.local/share/fonts
+# would be nicer to link, but a lot of files dont work, so I dont bother

@@ -1,0 +1,4 @@
+[Context]
+# WARNING
+# used to get the ffmpeg binary, so it needs to be unsandboxed
+filesystems=home;

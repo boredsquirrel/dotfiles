@@ -1,4 +1,6 @@
 [Context]
+# filesystems=host-os:ro; #needed for hardened_malloc preload
+filesystems=xdg-run/pipewire-0:ro;!~/.ssh;!~/.gnupg;
 filesystems=xdg-run/pipewire-0:ro;xdg-config/gtk-3.0;
 sockets=!x11;!pulseaudio;wayland;
 shared=!ipc;

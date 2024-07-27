@@ -13,11 +13,10 @@ alias konsole="konsole --new-tab"
 set PATH /home/user/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/var/home/user/.cargo/bin
 
 # Rust
-set PATH $PATH:/var/home/user/.cargo/bin/
+set PATH $PATH:/var/home/user/.cargo/bin
 
-# Random
-set PATH $PATH:/var/home/user/.bin/:/home/user/Programme/Appimage-Multiplatform
-set PATH $PATH:/var/home/user/--PERSÖNLICHES/-Tech/Android/GrapheneOS/platform-tools
+# Flatpaks
+set PATH $PATH:/var/lib/flatpak/exports/bin
 
 # edit and reload this config
 alias conf="kate ~/.config/fish/conf.d/base.fish && source ~/.config/fish/conf.d/base.fish && echo 'Fish-config updated'"
@@ -52,14 +51,15 @@ abbr firmwareup "fwupdmgr update"
 
 abbr off "shutdown -h now"
 
-abbr rootfish "sudo -i fish"
+abbr rootfish "sudo fish"
+# abbd rootfish "run0 /usr/bin/fish"
 
 abbr english "export LANG=en_US.UTF-8"
 abbr en english
-alias "german"="sudo echo '%_install_langs   en:en_US:C:de:de_DE' | tee -a /etc/rpm/macros && LANG=de_DE.UTF-8"
+alias "german"="sudo echo '%_install_langs en:en_US:C:de:de_DE' | tee -a /etc/rpm/macros && LANG=de_DE.UTF-8"
 
 ##### SYSTEM
 alias pipwire-restart="systemctl --user restart pipewire.service"
-alias wificard="lspci | awk '/[Nn]et/ {print $1}' | xargs -i% lspci -ks %"
 
 . ~/.config/fish/functions/*
+. ~/.config/fish/conf.d/*

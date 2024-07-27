@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Firefox PDF Editor
+GenericName=Web Browser
+Comment=Browse the Web
+# launch in insecure profile because blocking canvas prevents adding images
+# CHANGE THIS PROFILENAME
+# you may need to add a vanilla profile to do this
+Exec=firefox -p UNSICHER %u
+Icon=application-pdf
+Terminal=false
+Type=Application
+MimeType=application/x-pdf;
+Categories=Office;Viewer;
+Keywords=pdf;
